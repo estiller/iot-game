@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 namespace IoTGame.Driver
 {
@@ -6,5 +7,7 @@ namespace IoTGame.Driver
     {
         Task StartAsync();
         Task StopAsync();
+
+        event EventHandler<MovementEventArgs> MovementReadingAvailable;
     }
 }

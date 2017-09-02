@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using IoTGame.GoPiGo;
 
 namespace IoTGame.Driver
@@ -26,6 +27,14 @@ namespace IoTGame.Driver
             await Robot.Motor.StopAsync();
             await Robot.DistanceSensor.SetStateAsync(BinaryState.Off);
             await Robot.Led.SetLedAsync(BinaryState.Off);
+        }
+
+        public event EventHandler<MovementEventArgs> MovementReadingAvailable;
+
+        protected virtual void OnMovementReadingAvailable(Direction direction, double x, double y)
+        {
+            var handler = MovementReadingAvailable;
+            handler?.Invoke(this, new MovementEventArgs(direction, x, y));
         }
 
         private async Task InitSensor()

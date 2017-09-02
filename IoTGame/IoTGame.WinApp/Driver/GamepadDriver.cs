@@ -82,6 +82,7 @@ namespace IoTGame.WinApp.Driver
         private async Task MoveRobotAsync(GamepadReading reading)
         {
             var direction = VectorDirection(reading.LeftThumbstickX, reading.LeftThumbstickY);
+            OnMovementReadingAvailable(direction, reading.LeftThumbstickX, reading.LeftThumbstickY);
             switch (direction)
             {
                 case Direction.Stop:
@@ -153,15 +154,6 @@ namespace IoTGame.WinApp.Driver
             if (Math.PI * -0.75 <= angle && angle <= Math.PI * -0.25)
                 return Direction.Backward;
             return Direction.Left;
-        }
-
-        private enum Direction
-        {
-            Stop,
-            Forward,
-            Backward,
-            Right,
-            Left
         }
     }
 }

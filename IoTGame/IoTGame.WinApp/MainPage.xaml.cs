@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using IoTGame.Driver;
@@ -18,8 +19,15 @@ namespace IoTGame.WinApp
         {
             _robot = new GoPiGoRobot(new WindowsIoTPlatform());
             _driver = new GamepadDriver(_robot);
+            _driver.MovementReadingAvailable += DriverOnMovementReadingAvailable;
 
             InitializeComponent();
+        }
+
+        private void DriverOnMovementReadingAvailable(object sender, MovementEventArgs movementEventArgs)
+        {
+            VelocityGraph.VectorX = movementEventArgs.X;
+            VelocityGraph.VectorY = movementEventArgs.Y;
         }
 
         private async void RobotState_Checked(object sender, RoutedEventArgs e)

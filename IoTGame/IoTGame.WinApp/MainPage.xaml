@@ -15,5 +15,7 @@
                 <RadioButton Content="Off" Tag="Off" Checked="RobotState_Checked"/>
             </StackPanel>
         </StackPanel>
+
+        <local:VelocityGraph Width="400" Height="400" Background="Blue" VectorX="380" VectorY="200" x:Name="VelocityGraph"/>
     </StackPanel>
 </Page>
