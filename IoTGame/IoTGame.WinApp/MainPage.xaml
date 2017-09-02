@@ -7,7 +7,13 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-
-    </Grid>
+    <StackPanel Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <StackPanel>
+            <TextBlock Text="Robot State" Style="{ThemeResource BaseTextBlockStyle}"/>
+            <StackPanel Orientation="Horizontal">
+                <RadioButton Content="On" Tag="On" Checked="RobotState_Checked" IsChecked="True"/>
+                <RadioButton Content="Off" Tag="Off" Checked="RobotState_Checked"/>
+            </StackPanel>
+        </StackPanel>
+    </StackPanel>
 </Page>

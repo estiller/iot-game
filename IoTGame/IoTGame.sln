@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IoTGame.WinApp", "IoTGame.W
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IoTGame.GoPiGo", "IoTGame.GoPiGo\IoTGame.GoPiGo.csproj", "{4EADF1A5-4B02-4A80-B13A-85EAD6B2EAC2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IoTGame.Driver", "IoTGame.Driver\IoTGame.Driver.csproj", "{47379E0C-C9F7-4D08-9289-6F87EB1BF2C6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +57,22 @@ Global
 		{4EADF1A5-4B02-4A80-B13A-85EAD6B2EAC2}.Release|x64.Build.0 = Release|Any CPU
 		{4EADF1A5-4B02-4A80-B13A-85EAD6B2EAC2}.Release|x86.ActiveCfg = Release|Any CPU
 		{4EADF1A5-4B02-4A80-B13A-85EAD6B2EAC2}.Release|x86.Build.0 = Release|Any CPU
+		{47379E0C-C9F7-4D08-9289-6F87EB1BF2C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47379E0C-C9F7-4D08-9289-6F87EB1BF2C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47379E0C-C9F7-4D08-9289-6F87EB1BF2C6}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{47379E0C-C9F7-4D08-9289-6F87EB1BF2C6}.Debug|ARM.Build.0 = Debug|Any CPU
+		{47379E0C-C9F7-4D08-9289-6F87EB1BF2C6}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{47379E0C-C9F7-4D08-9289-6F87EB1BF2C6}.Debug|x64.Build.0 = Debug|Any CPU
+		{47379E0C-C9F7-4D08-9289-6F87EB1BF2C6}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{47379E0C-C9F7-4D08-9289-6F87EB1BF2C6}.Debug|x86.Build.0 = Debug|Any CPU
+		{47379E0C-C9F7-4D08-9289-6F87EB1BF2C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47379E0C-C9F7-4D08-9289-6F87EB1BF2C6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{47379E0C-C9F7-4D08-9289-6F87EB1BF2C6}.Release|ARM.ActiveCfg = Release|Any CPU
+		{47379E0C-C9F7-4D08-9289-6F87EB1BF2C6}.Release|ARM.Build.0 = Release|Any CPU
+		{47379E0C-C9F7-4D08-9289-6F87EB1BF2C6}.Release|x64.ActiveCfg = Release|Any CPU
+		{47379E0C-C9F7-4D08-9289-6F87EB1BF2C6}.Release|x64.Build.0 = Release|Any CPU
+		{47379E0C-C9F7-4D08-9289-6F87EB1BF2C6}.Release|x86.ActiveCfg = Release|Any CPU
+		{47379E0C-C9F7-4D08-9289-6F87EB1BF2C6}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

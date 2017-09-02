@@ -34,7 +34,9 @@ namespace IoTGame.WinApp.GoPiGo
 
         public async Task OpenAsync()
         {
-            Debug.Assert(_device == null);
+            if (_device != null)
+                return;
+
             var settings = new I2cConnectionSettings(GoPiGoAddress)
             {
                 BusSpeed = I2cBusSpeed.StandardMode
