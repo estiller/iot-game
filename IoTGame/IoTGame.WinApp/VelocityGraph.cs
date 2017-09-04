@@ -55,8 +55,8 @@ namespace IoTGame.WinApp
                 StrokeThickness = 5,
                 X1 = Width / 2.0,
                 Y1 = Height / 2.0,
-                X2 = VectorX,
-                Y2 = VectorY
+                X2 = Width / 2.0,
+                Y2 = Height / 2.0
             };
 
             Canvas canvas = (Canvas)GetTemplateChild("Canvas");

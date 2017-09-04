@@ -1,10 +1,8 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using IoTGame.Driver;
 using IoTGame.GoPiGo;
-using IoTGame.WinApp.Driver;
 using IoTGame.WinApp.GoPiGo;
 
 
@@ -14,20 +12,24 @@ namespace IoTGame.WinApp
     {
         private readonly IGoPiGoRobot _robot;
         private readonly IDriver _driver;
+        private readonly GamepadController _controller;
 
         public MainPage()
         {
             _robot = new GoPiGoRobot(new WindowsIoTPlatform());
-            _driver = new GamepadDriver(_robot);
-            _driver.MovementReadingAvailable += DriverOnMovementReadingAvailable;
+            _driver = new GoPiGoDriver(_robot);
+            var eventDecorator = new EventDriverDecorator(_driver);
+            _controller = new GamepadController(eventDecorator);
+
+            eventDecorator.DriveCommandAvailable += DriveCommandAvailable;
 
             InitializeComponent();
         }
 
-        private void DriverOnMovementReadingAvailable(object sender, MovementEventArgs movementEventArgs)
+        private void DriveCommandAvailable(object sender, DriveCommandEventArgs args)
         {
-            VelocityGraph.VectorX = movementEventArgs.X;
-            VelocityGraph.VectorY = movementEventArgs.Y;
+            VelocityGraph.VectorX = args.Command.MotionVector.X;
+            VelocityGraph.VectorY = args.Command.MotionVector.Y;
         }
 
         private async void RobotState_Checked(object sender, RoutedEventArgs e)
@@ -51,10 +53,12 @@ namespace IoTGame.WinApp
         {
             await _robot.OpenAsync();
             await _driver.StartAsync();
+            await _controller.StartAsync();
         }
 
         private async Task StopRobot()
         {
+            await _controller.StopAsync();
             await _driver.StopAsync();
         }
     }

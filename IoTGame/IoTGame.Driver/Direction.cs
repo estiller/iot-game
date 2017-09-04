@@ -1,6 +1,6 @@
 ﻿namespace IoTGame.Driver
 {
-    public enum Direction
+    internal enum Direction
     {
         Stop,
         Forward,

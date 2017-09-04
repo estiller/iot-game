@@ -1,13 +1,11 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace IoTGame.Driver
 {
     public interface IDriver
     {
         Task StartAsync();
+        Task DriveAsync(DriveCommand drive);
         Task StopAsync();
-
-        event EventHandler<MovementEventArgs> MovementReadingAvailable;
     }
 }
