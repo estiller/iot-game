@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Globalization;
+using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using IoTGame.Driver;
@@ -13,6 +15,7 @@ namespace IoTGame.WinApp
         private readonly IGoPiGoRobot _robot;
         private readonly IDriver _driver;
         private readonly GamepadController _controller;
+        private readonly DispatcherTimer _distanceTimer;
 
         public MainPage()
         {
@@ -23,7 +26,16 @@ namespace IoTGame.WinApp
 
             eventDecorator.DriveCommandAvailable += DriveCommandAvailable;
 
+            _distanceTimer = new DispatcherTimer {Interval = TimeSpan.FromSeconds(1)};
+            _distanceTimer.Tick += MeasureDistance;
+
             InitializeComponent();
+        }
+
+        private async void MeasureDistance(object sender, object o)
+        {
+            var distance = await _robot.DistanceSensor.MeasureInCentimetersAsync();
+            DistanceText.Text = distance.ToString(CultureInfo.InvariantCulture);
         }
 
         private void DriveCommandAvailable(object sender, DriveCommandEventArgs args)
@@ -54,10 +66,12 @@ namespace IoTGame.WinApp
             await _robot.OpenAsync();
             await _driver.StartAsync();
             await _controller.StartAsync();
+            _distanceTimer.Start();
         }
 
         private async Task StopRobot()
         {
+            _distanceTimer.Stop();
             await _controller.StopAsync();
             await _driver.StopAsync();
         }
