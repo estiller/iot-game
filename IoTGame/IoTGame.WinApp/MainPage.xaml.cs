@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Globalization;
 using System.Threading.Tasks;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using IoTGame.Driver;
 using IoTGame.GoPiGo;
+using IoTGame.WinApp.Controller;
 using IoTGame.WinApp.GoPiGo;
 
 
@@ -12,30 +14,30 @@ namespace IoTGame.WinApp
 {
     public sealed partial class MainPage
     {
-        private readonly IGoPiGoRobot _robot;
-        private readonly IDriver _driver;
         private readonly GamepadController _controller;
-        private readonly DispatcherTimer _distanceTimer;
 
         public MainPage()
         {
-            _robot = new GoPiGoRobot(new WindowsIoTPlatform());
-            _driver = new GoPiGoDriver(_robot);
-            var eventDecorator = new EventDriverDecorator(_driver);
-            _controller = new GamepadController(eventDecorator);
+            var robot = new GoPiGoRobot(new WindowsIoTPlatform());
+            var driver = new GoPiGoDriver(robot);
+            var eventDecorator = new EventDriverDecorator(driver);
+            var distanceMeasure = new DistanceMeasurementDriver(eventDecorator, TimeSpan.FromSeconds(1));
+            _controller = new GamepadController(distanceMeasure);
 
             eventDecorator.DriveCommandAvailable += DriveCommandAvailable;
-
-            _distanceTimer = new DispatcherTimer {Interval = TimeSpan.FromSeconds(1)};
-            _distanceTimer.Tick += MeasureDistance;
+            distanceMeasure.DistanceMeasurementAvailable += DistanceMeasurementAvailable;
 
             InitializeComponent();
         }
 
-        private async void MeasureDistance(object sender, object o)
+        private async void DistanceMeasurementAvailable(object sender, DistanceMeasurementEventArgs e)
         {
-            var distance = await _robot.DistanceSensor.MeasureInCentimetersAsync();
-            DistanceText.Text = distance.ToString(CultureInfo.InvariantCulture);
+            if (!Dispatcher.HasThreadAccess)
+            {
+                await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => DistanceMeasurementAvailable(sender, e));
+                return;
+            }
+            DistanceText.Text = e.Distance.ToString(CultureInfo.InvariantCulture);
         }
 
         private void DriveCommandAvailable(object sender, DriveCommandEventArgs args)
@@ -63,17 +65,12 @@ namespace IoTGame.WinApp
 
         private async Task StartRobot()
         {
-            await _robot.OpenAsync();
-            await _driver.StartAsync();
             await _controller.StartAsync();
-            _distanceTimer.Start();
         }
 
         private async Task StopRobot()
         {
-            _distanceTimer.Stop();
             await _controller.StopAsync();
-            await _driver.StopAsync();
         }
     }
 }

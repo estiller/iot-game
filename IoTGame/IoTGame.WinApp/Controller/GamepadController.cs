@@ -4,17 +4,17 @@ using System.Threading.Tasks;
 using Windows.Gaming.Input;
 using IoTGame.Driver;
 
-namespace IoTGame.WinApp.GoPiGo
+namespace IoTGame.WinApp.Controller
 {
     public class GamepadController
     {
-        private readonly IDriver _driver;
+        private readonly IGoPiGoDriver _driver;
 
         private CancellationTokenSource _cancellationTokenSource;
         private Task _loopTask;
         private Gamepad _gamepad;
 
-        public GamepadController(IDriver driver)
+        public GamepadController(IGoPiGoDriver driver)
         {
             _driver = driver;
         }

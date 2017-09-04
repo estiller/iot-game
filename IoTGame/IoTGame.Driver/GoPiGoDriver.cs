@@ -4,19 +4,21 @@ using IoTGame.GoPiGo;
 
 namespace IoTGame.Driver
 {
-    public class GoPiGoDriver : IDriver
+    public class GoPiGoDriver : IGoPiGoDriver
     {
-        private readonly IGoPiGoRobot _robot;
         private int _sensorAngle;
 
         public GoPiGoDriver(IGoPiGoRobot robot)
         {
-            _robot = robot;
+            Robot = robot;
             _sensorAngle = 90;
         }
 
+        public IGoPiGoRobot Robot { get; }
+
         public virtual async Task StartAsync()
         {
+            await Robot.OpenAsync();
             await InitSensor();
             await InitLed();
         }
@@ -29,21 +31,21 @@ namespace IoTGame.Driver
 
         public virtual async Task StopAsync()
         {
-            await _robot.Motor.StopAsync();
-            await _robot.DistanceSensor.SetStateAsync(BinaryState.Off);
-            await _robot.Led.SetLedAsync(BinaryState.Off);
+            await Robot.Motor.StopAsync();
+            await Robot.DistanceSensor.SetStateAsync(BinaryState.Off);
+            await Robot.Led.SetLedAsync(BinaryState.Off);
         }
 
         private async Task InitSensor()
         {
-            var distanceSensor = _robot.DistanceSensor;
+            var distanceSensor = Robot.DistanceSensor;
             await distanceSensor.SetStateAsync(BinaryState.On);
             await distanceSensor.SetAngleAsync(_sensorAngle);
         }
 
         private async Task InitLed()
         {
-            var led = _robot.Led;
+            var led = Robot.Led;
             await led.OpenAsync();
             for (int i = 0; i < 3; i++)
             {
@@ -60,19 +62,19 @@ namespace IoTGame.Driver
             switch (direction)
             {
                 case Direction.Stop:
-                    await _robot.Motor.StopAsync();
+                    await Robot.Motor.StopAsync();
                     break;
                 case Direction.Forward:
-                    await _robot.Motor.MoveForwardAsync();
+                    await Robot.Motor.MoveForwardAsync();
                     break;
                 case Direction.Backward:
-                    await _robot.Motor.MoveBackwardAsync();
+                    await Robot.Motor.MoveBackwardAsync();
                     break;
                 case Direction.Right:
-                    await _robot.Motor.MoveRightAsync();
+                    await Robot.Motor.MoveRightAsync();
                     break;
                 case Direction.Left:
-                    await _robot.Motor.MoveLeftAsync();
+                    await Robot.Motor.MoveLeftAsync();
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -90,11 +92,11 @@ namespace IoTGame.Driver
                     break;
                 case Direction.Right:
                     _sensorAngle -= 3;
-                    await _robot.DistanceSensor.SetAngleAsync(_sensorAngle);
+                    await Robot.DistanceSensor.SetAngleAsync(_sensorAngle);
                     break;
                 case Direction.Left:
                     _sensorAngle += 3;
-                    await _robot.DistanceSensor.SetAngleAsync(_sensorAngle);
+                    await Robot.DistanceSensor.SetAngleAsync(_sensorAngle);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

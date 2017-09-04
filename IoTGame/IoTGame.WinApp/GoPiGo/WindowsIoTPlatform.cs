@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Threading;
 using System.Threading.Tasks;
 using Windows.Devices.Enumeration;
 using Windows.Devices.I2c;
@@ -31,6 +32,7 @@ namespace IoTGame.WinApp.GoPiGo
             });
 
         private I2cDevice _device;
+        private SemaphoreSlim _deviceLock;
 
         public async Task OpenAsync()
         {
@@ -44,22 +46,40 @@ namespace IoTGame.WinApp.GoPiGo
 
             var deviceInformation = await GetDeviceInformation();
             _device = await I2cDevice.FromIdAsync(deviceInformation.Id, settings);
+            _deviceLock = new SemaphoreSlim(1);
         }
 
-        public Task WriteAsync(byte command, byte firstParam = 0, byte secondParam = 0, byte thirdParam = 0)
+        public async Task WriteAsync(byte command, byte firstParam = 0, byte secondParam = 0, byte thirdParam = 0)
         {
-            var writeBuffer = new[] {command, firstParam, secondParam, thirdParam};
-            bool success = RetryPolicy.Execute(() => TryWrite(writeBuffer));
-            return success ? Task.CompletedTask : Task.FromException<Exception>(new Exception("Could not complete write operation"));
+            await _deviceLock.WaitAsync();
+            try
+            {
+                var writeBuffer = new[] { command, firstParam, secondParam, thirdParam };
+                bool success = RetryPolicy.Execute(() => TryWrite(writeBuffer));
+                if (!success)
+                    throw new Exception("Could not complete write operation");
+            }
+            finally
+            {
+                _deviceLock.Release();
+            }
         }
 
         public async Task<byte[]> WriteReadAsync(byte command, int bytesToRead, byte firstParam = 0, byte secondParam = 0, byte thirdParam = 0)
         {
-            var writeBuffer = new[] {command, firstParam, secondParam, thirdParam};
-            var outputBuffer = new byte[bytesToRead];
-            bool success = await RetryAsyncPolicy.ExecuteAsync(() => TryWriteRead(writeBuffer, outputBuffer, bytesToRead));
-            if (!success) throw new Exception("Could not complete write-read operation");
-            return outputBuffer;
+            await _deviceLock.WaitAsync();
+            try
+            {
+                var writeBuffer = new[] {command, firstParam, secondParam, thirdParam};
+                var outputBuffer = new byte[bytesToRead];
+                bool success = await RetryAsyncPolicy.ExecuteAsync(() => TryWriteRead(writeBuffer, outputBuffer, bytesToRead));
+                if (!success) throw new Exception("Could not complete write-read operation");
+                return outputBuffer;
+            }
+            finally
+            {
+                _deviceLock.Release();
+            }
         }
 
         private static async Task<DeviceInformation> GetDeviceInformation()

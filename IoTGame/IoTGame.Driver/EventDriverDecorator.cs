@@ -1,16 +1,19 @@
 ﻿using System;
 using System.Threading.Tasks;
+using IoTGame.GoPiGo;
 
 namespace IoTGame.Driver
 {
-    public class EventDriverDecorator : IDriver
+    public class EventDriverDecorator : IGoPiGoDriver
     {
-        private readonly IDriver _internalDriver;
+        private readonly IGoPiGoDriver _internalDriver;
 
-        public EventDriverDecorator(IDriver internalDriver)
+        public EventDriverDecorator(IGoPiGoDriver internalDriver)
         {
             _internalDriver = internalDriver;
         }
+
+        public IGoPiGoRobot Robot => _internalDriver.Robot;
 
         public Task StartAsync()
         {
@@ -30,7 +33,7 @@ namespace IoTGame.Driver
 
         public event EventHandler<DriveCommandEventArgs> DriveCommandAvailable;
 
-        protected virtual void OnDriveCommandAvailable(DriveCommand command)
+        private void OnDriveCommandAvailable(DriveCommand command)
         {
             var handler = DriveCommandAvailable;
             handler?.Invoke(this, new DriveCommandEventArgs(command));
