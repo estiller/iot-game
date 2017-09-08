@@ -5,6 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.Azure.Amqp" Version="2.1.1" />
+    <PackageReference Include="Microsoft.Azure.ServiceBus" Version="1.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\IoTGame.GoPiGo\IoTGame.GoPiGo.csproj" />
   </ItemGroup>
 
