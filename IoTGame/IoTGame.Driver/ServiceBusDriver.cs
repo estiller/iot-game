@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using System.Threading.Tasks;
+using IoTGame.Constants;
 using Microsoft.Azure.ServiceBus;
 using Newtonsoft.Json;
 
@@ -11,7 +12,7 @@ namespace IoTGame.Driver
 
         public ServiceBusDriver()
         {
-            _topicClient = new TopicClient(ServiceBusSecret.ConnectionString, "drivecommands");
+            _topicClient = new TopicClient(ServiceBusConstants.ConnectionString, ServiceBusConstants.DriveCommandTopicName);
         }
 
         public Task StartAsync()

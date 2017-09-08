@@ -2,8 +2,10 @@
 using System.Globalization;
 using System.Threading.Tasks;
 using Windows.System.Profile;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using IoTGame.Constants;
 using IoTGame.Controller;
 using IoTGame.Driver;
 using IoTGame.GoPiGo;
@@ -19,11 +21,14 @@ namespace IoTGame.RobotWinApp
 
         public MainPage()
         {
-            IDriver driver;
             if (IsRunningOnIoTDevice())
             {
                 var robot = new GoPiGoRobot(new WindowsIoTPlatform());
-                driver = new GoPiGoDriver(robot);
+                var driver = new GoPiGoDriver(robot);
+                var eventDecorator = new EventDriverDecorator(driver);
+                eventDecorator.DriveCommandAvailable += DriveCommandAvailable;
+                //_controller = new GamepadController(eventDecorator);
+                _controller = new ServiceBusController(eventDecorator, ServiceBusConstants.DeviceSubscriptionName);
 
                 _updateTimer = new DispatcherTimer {Interval = TimeSpan.FromSeconds(1)};
                 _updateTimer.Tick += async (sender, args) =>
@@ -36,12 +41,12 @@ namespace IoTGame.RobotWinApp
             }
             else
             {
-                driver = new ServiceBusDriver();
+                var driver = new ServiceBusDriver();
+                var eventDecorator = new EventDriverDecorator(driver);
+                eventDecorator.DriveCommandAvailable += DriveCommandAvailable;
+                _controller = new GamepadController(eventDecorator);
             }
 
-            var eventDecorator = new EventDriverDecorator(driver);
-            eventDecorator.DriveCommandAvailable += DriveCommandAvailable;
-            _controller = new GamepadController(eventDecorator);
 
             InitializeComponent();
 
@@ -50,8 +55,14 @@ namespace IoTGame.RobotWinApp
                 return AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.IoT";
             }
 
-            void DriveCommandAvailable(object sender, DriveCommandEventArgs args)
+            async void DriveCommandAvailable(object sender, DriveCommandEventArgs args)
             {
+                if (!Dispatcher.HasThreadAccess)
+                {
+                    await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => DriveCommandAvailable(sender, args));
+                    return;
+                }
+
                 VelocityGraph.VectorX = args.Command.MotionVector.X;
                 VelocityGraph.VectorY = args.Command.MotionVector.Y;
             }

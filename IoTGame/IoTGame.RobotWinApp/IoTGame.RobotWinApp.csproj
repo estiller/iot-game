@@ -143,6 +143,10 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\IoTGame.Constants\IoTGame.Constants.csproj">
+      <Project>{4c130398-e6ea-4968-94db-07a1c09d3d43}</Project>
+      <Name>IoTGame.Constants</Name>
+    </ProjectReference>
     <ProjectReference Include="..\IoTGame.Controller\IoTGame.Controller.csproj">
       <Project>{fa77ddb1-3cad-4350-90a2-5567c093d2fd}</Project>
       <Name>IoTGame.Controller</Name>

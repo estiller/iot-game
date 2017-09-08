@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\IoTGame.Constants\IoTGame.Constants.csproj" />
     <ProjectReference Include="..\IoTGame.GoPiGo\IoTGame.GoPiGo.csproj" />
   </ItemGroup>
 
