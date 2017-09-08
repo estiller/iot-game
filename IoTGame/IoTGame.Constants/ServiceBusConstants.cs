@@ -8,6 +8,10 @@ namespace IoTGame.Constants
 
         public const string DriveCommandTopicName = "drivecommands";
 
+        public const string ReportBackTopicName = "reportback";
+
         public const string DeviceSubscriptionName = "gopigo";
+
+        public const string DisplaySubscriptionName = "display";
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.IO;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -15,6 +16,7 @@ namespace IoTGame.Controller
         private readonly string _subscriptionName;
 
         private ISubscriptionClient _subscriptionClient;
+        private ITopicClient _topicClient;
 
         public ServiceBusController(IDriver driver, string subscriptionName)
         {
@@ -28,14 +30,36 @@ namespace IoTGame.Controller
 
             _subscriptionClient = new SubscriptionClient(ServiceBusConstants.ConnectionString, ServiceBusConstants.DriveCommandTopicName, _subscriptionName, ReceiveMode.ReceiveAndDelete);
             _subscriptionClient.RegisterMessageHandler(HandleMessageAsync, new MessageHandlerOptions(HandleExceptionAsync) { MaxConcurrentCalls = 1});
+
+            _topicClient = new TopicClient(ServiceBusConstants.ConnectionString, ServiceBusConstants.ReportBackTopicName);
         }
 
         public async Task StopAsync()
         {
+            await _topicClient.CloseAsync();
+            _topicClient = null;
+
             await _subscriptionClient.CloseAsync();
             _subscriptionClient = null;
 
             await _driver.StopAsync();
+        }
+
+        public async Task ReportBackAsync(int distanceCm, decimal voltage)
+        {
+            var message = new Message(SerializeReport());
+            await _topicClient.SendAsync(message);
+
+            byte[] SerializeReport()
+            {
+                using (var stream = new MemoryStream())
+                {
+                    var writer = new BinaryWriter(stream);
+                    writer.Write(distanceCm);
+                    writer.Write(voltage);
+                    return stream.ToArray();
+                }
+            }
         }
 
         private Task HandleMessageAsync(Message message, CancellationToken cancellationToken)

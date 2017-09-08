@@ -28,25 +28,44 @@ namespace IoTGame.RobotWinApp
                 var eventDecorator = new EventDriverDecorator(driver);
                 eventDecorator.DriveCommandAvailable += DriveCommandAvailable;
                 //_controller = new GamepadController(eventDecorator);
-                _controller = new ServiceBusController(eventDecorator, ServiceBusConstants.DeviceSubscriptionName);
+                var serviceBusController = new ServiceBusController(eventDecorator, ServiceBusConstants.DeviceSubscriptionName);
+                _controller = serviceBusController;
 
                 _updateTimer = new DispatcherTimer {Interval = TimeSpan.FromSeconds(1)};
                 _updateTimer.Tick += async (sender, args) =>
                 {
                     if (string.IsNullOrEmpty(FirmwareVersionText.Text))
                         FirmwareVersionText.Text = await robot.GetFirmwareVersionAsync();
-                    BatteryVoltageText.Text = (await robot.GetBatteryVoltageAsync()).ToString(CultureInfo.CurrentCulture);
-                    DistanceText.Text = (await robot.DistanceSensor.MeasureInCentimetersAsync()).ToString(CultureInfo.CurrentCulture);
+
+                    var voltage = await robot.GetBatteryVoltageAsync();
+                    BatteryVoltageText.Text = voltage.ToString(CultureInfo.CurrentCulture);
+
+                    var distanceCm = await robot.DistanceSensor.MeasureInCentimetersAsync();
+                    DistanceText.Text = distanceCm.ToString(CultureInfo.CurrentCulture);
+
+                    await serviceBusController.ReportBackAsync(distanceCm, voltage);
                 };
             }
             else
             {
                 var driver = new ServiceBusDriver();
+                driver.ReportBackAvailable += OnReportBackAvailable;
                 var eventDecorator = new EventDriverDecorator(driver);
                 eventDecorator.DriveCommandAvailable += DriveCommandAvailable;
                 _controller = new GamepadController(eventDecorator);
-            }
 
+                async void OnReportBackAvailable(object sender, ReportBackEventArgs args)
+                {
+                    if (!Dispatcher.HasThreadAccess)
+                    {
+                        await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => OnReportBackAvailable(sender, args));
+                        return;
+                    }
+
+                    BatteryVoltageText.Text = args.Voltage.ToString(CultureInfo.CurrentCulture);
+                    DistanceText.Text = args.DistanceCm.ToString(CultureInfo.CurrentCulture);
+                }
+            }
 
             InitializeComponent();
 
