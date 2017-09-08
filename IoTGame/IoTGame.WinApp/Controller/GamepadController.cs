@@ -2,19 +2,20 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Gaming.Input;
+using IoTGame.Controller;
 using IoTGame.Driver;
 
 namespace IoTGame.WinApp.Controller
 {
-    public class GamepadController
+    public class GamepadController : IController
     {
-        private readonly IGoPiGoDriver _driver;
+        private readonly IDriver _driver;
 
         private CancellationTokenSource _cancellationTokenSource;
         private Task _loopTask;
         private Gamepad _gamepad;
 
-        public GamepadController(IGoPiGoDriver driver)
+        public GamepadController(IDriver driver)
         {
             _driver = driver;
         }

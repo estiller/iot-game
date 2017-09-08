@@ -1,19 +1,16 @@
 ﻿using System;
 using System.Threading.Tasks;
-using IoTGame.GoPiGo;
 
 namespace IoTGame.Driver
 {
-    public class EventDriverDecorator : IGoPiGoDriver
+    public class EventDriverDecorator : IDriver
     {
-        private readonly IGoPiGoDriver _internalDriver;
+        private readonly IDriver _internalDriver;
 
-        public EventDriverDecorator(IGoPiGoDriver internalDriver)
+        public EventDriverDecorator(IDriver internalDriver)
         {
             _internalDriver = internalDriver;
         }
-
-        public IGoPiGoRobot Robot => _internalDriver.Robot;
 
         public Task StartAsync()
         {

@@ -143,6 +143,10 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\IoTGame.Controller\IoTGame.Controller.csproj">
+      <Project>{fa77ddb1-3cad-4350-90a2-5567c093d2fd}</Project>
+      <Name>IoTGame.Controller</Name>
+    </ProjectReference>
     <ProjectReference Include="..\IoTGame.Driver\IoTGame.Driver.csproj">
       <Project>{47379e0c-c9f7-4d08-9289-6f87eb1bf2c6}</Project>
       <Name>IoTGame.Driver</Name>

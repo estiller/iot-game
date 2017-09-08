@@ -1,49 +1,48 @@
 ﻿using System;
 using System.Globalization;
 using System.Threading.Tasks;
-using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using IoTGame.Controller;
 using IoTGame.Driver;
 using IoTGame.GoPiGo;
 using IoTGame.WinApp.Controller;
 using IoTGame.WinApp.GoPiGo;
 
-
 namespace IoTGame.WinApp
 {
     public sealed partial class MainPage
     {
-        private readonly GamepadController _controller;
+        private readonly IController _controller;
+        private readonly DispatcherTimer _updateTimer;
 
         public MainPage()
         {
             var robot = new GoPiGoRobot(new WindowsIoTPlatform());
-            var driver = new GoPiGoDriver(robot);
-            var eventDecorator = new EventDriverDecorator(driver);
-            var distanceMeasure = new DistanceMeasurementDriver(eventDecorator, TimeSpan.FromSeconds(1));
-            _controller = new GamepadController(distanceMeasure);
+            var goPiGoDriver = new GoPiGoDriver(robot);
+            var driver = new EventDriverDecorator(goPiGoDriver);
+            driver.DriveCommandAvailable += DriveCommandAvailable;
+            _controller = new GamepadController(driver);
 
-            eventDecorator.DriveCommandAvailable += DriveCommandAvailable;
-            distanceMeasure.DistanceMeasurementAvailable += DistanceMeasurementAvailable;
+            _updateTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
+            _updateTimer.Tick += OnUpdateTimerTick;
 
             InitializeComponent();
-        }
 
-        private async void DistanceMeasurementAvailable(object sender, DistanceMeasurementEventArgs e)
-        {
-            if (!Dispatcher.HasThreadAccess)
+
+            void DriveCommandAvailable(object sender, DriveCommandEventArgs args)
             {
-                await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => DistanceMeasurementAvailable(sender, e));
-                return;
+                VelocityGraph.VectorX = args.Command.MotionVector.X;
+                VelocityGraph.VectorY = args.Command.MotionVector.Y;
             }
-            DistanceText.Text = e.Distance.ToString(CultureInfo.InvariantCulture);
-        }
 
-        private void DriveCommandAvailable(object sender, DriveCommandEventArgs args)
-        {
-            VelocityGraph.VectorX = args.Command.MotionVector.X;
-            VelocityGraph.VectorY = args.Command.MotionVector.Y;
+            async void OnUpdateTimerTick(object sender, object args)
+            {
+                if (string.IsNullOrEmpty(FirmwareVersionText.Text))
+                    FirmwareVersionText.Text = await robot.GetFirmwareVersionAsync();
+                BatteryVoltageText.Text = (await robot.GetBatteryVoltageAsync()).ToString(CultureInfo.CurrentCulture);
+                DistanceText.Text = (await robot.DistanceSensor.MeasureInCentimetersAsync()).ToString(CultureInfo.CurrentCulture);
+            }
         }
 
         private async void RobotState_Checked(object sender, RoutedEventArgs e)
@@ -66,10 +65,12 @@ namespace IoTGame.WinApp
         private async Task StartRobot()
         {
             await _controller.StartAsync();
+            _updateTimer.Start();
         }
 
         private async Task StopRobot()
         {
+            _updateTimer.Stop();
             await _controller.StopAsync();
         }
     }

@@ -15,7 +15,17 @@
                 <RadioButton Content="Off" Tag="Off" Checked="RobotState_Checked"/>
             </StackPanel>
         </StackPanel>
-        
+
+        <StackPanel Orientation="Horizontal">
+            <TextBlock Text="Firmware Version: "/>
+            <TextBlock Name="FirmwareVersionText" Foreground="Red" />
+        </StackPanel>
+
+        <StackPanel Orientation="Horizontal">
+            <TextBlock Text="Battery Voltage: "/>
+            <TextBlock Name="BatteryVoltageText" Foreground="Red" />
+        </StackPanel>
+
         <StackPanel Orientation="Horizontal">
             <TextBlock Text="Distance from front: "/>
             <TextBlock Name="DistanceText" Foreground="Red" />
