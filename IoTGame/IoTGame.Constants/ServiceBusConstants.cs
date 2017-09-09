@@ -2,7 +2,7 @@
 {
     public static class ServiceBusConstants
     {
-        public static readonly string ConnectionString = "";
+        public const string ConnectionString = "";
 
         public const string DriveCommandTopicName = "drivecommands";
 
