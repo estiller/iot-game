@@ -20,7 +20,7 @@ namespace IoTGame.Driver
         {
             _topicClient = new TopicClient(ServiceBusConstants.ConnectionString, ServiceBusConstants.DriveCommandTopicName);
 
-            _subscriptionClient = new SubscriptionClient(ServiceBusConstants.ConnectionString, ServiceBusConstants.ReportBackTopicName, ServiceBusConstants.DisplaySubscriptionName, ReceiveMode.ReceiveAndDelete);
+            _subscriptionClient = new SubscriptionClient(ServiceBusConstants.ConnectionString, ServiceBusConstants.ReportBackTopicName, ServiceBusConstants.ControlSubscriptionName, ReceiveMode.ReceiveAndDelete);
             _subscriptionClient.RegisterMessageHandler(HandleMessageAsync, new MessageHandlerOptions(HandleExceptionAsync) { MaxConcurrentCalls = 1 });
 
             return Task.CompletedTask;

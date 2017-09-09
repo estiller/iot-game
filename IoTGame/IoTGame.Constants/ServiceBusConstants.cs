@@ -1,10 +1,8 @@
-﻿using System;
-
-namespace IoTGame.Constants
+﻿namespace IoTGame.Constants
 {
     public static class ServiceBusConstants
     {
-        public const string ConnectionString = "";
+        public static readonly string ConnectionString = "";
 
         public const string DriveCommandTopicName = "drivecommands";
 
@@ -12,6 +10,6 @@ namespace IoTGame.Constants
 
         public const string DeviceSubscriptionName = "gopigo";
 
-        public const string DisplaySubscriptionName = "display";
+        public const string ControlSubscriptionName = "control";
     }
 }

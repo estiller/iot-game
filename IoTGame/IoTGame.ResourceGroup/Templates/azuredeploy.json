@@ -1,0 +1,129 @@
+﻿{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "namespaces_iotgame_name": {
+      "type": "string"
+    }
+  },
+  "variables": {
+    "topics_reportback_name": "reportback",
+    "topics_drivecommands_name": "drivecommands",
+    "subscriptions_control_name": "control",
+    "subscriptions_gopigo_name": "gopigo",
+    "AuthorizationRules_RootManageSharedAccessKey_name": "RootManageSharedAccessKey"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.ServiceBus/namespaces",
+      "sku": {
+        "name": "Standard",
+        "tier": "Standard",
+        "capacity": 1
+      },
+      "kind": "Messaging",
+      "name": "[parameters('namespaces_iotgame_name')]",
+      "apiVersion": "2015-08-01",
+      "location": "West Europe",
+      "properties": {
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/AuthorizationRules",
+      "name": "[concat(parameters('namespaces_iotgame_name'), '/', variables('AuthorizationRules_RootManageSharedAccessKey_name'))]",
+      "apiVersion": "2015-08-01",
+      "properties": {
+        "rights": [
+          "Listen",
+          "Manage",
+          "Send"
+        ]
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_iotgame_name'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics",
+      "name": "[concat(parameters('namespaces_iotgame_name'), '/', variables('topics_drivecommands_name'))]",
+      "apiVersion": "2015-08-01",
+      "location": "West Europe",
+      "properties": {
+        "defaultMessageTimeToLive": "00:00:10",
+        "maxSizeInMegabytes": 1024,
+        "requiresDuplicateDetection": false,
+        "enableBatchedOperations": true,
+        "filteringMessagesBeforePublishing": false,
+        "isAnonymousAccessible": false,
+        "supportOrdering": false,
+        "enablePartitioning": false,
+        "isExpress": false,
+        "enableSubscriptionPartitioning": false,
+        "enableExpress": false
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_iotgame_name'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics",
+      "name": "[concat(parameters('namespaces_iotgame_name'), '/', variables('topics_reportback_name'))]",
+      "apiVersion": "2015-08-01",
+      "location": "West Europe",
+      "properties": {
+        "defaultMessageTimeToLive": "00:00:10",
+        "maxSizeInMegabytes": 1024,
+        "requiresDuplicateDetection": false,
+        "enableBatchedOperations": true,
+        "filteringMessagesBeforePublishing": false,
+        "isAnonymousAccessible": false,
+        "supportOrdering": false,
+        "enablePartitioning": false,
+        "isExpress": false,
+        "enableSubscriptionPartitioning": false,
+        "enableExpress": false
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_iotgame_name'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions",
+      "name": "[concat(parameters('namespaces_iotgame_name'), '/', variables('topics_drivecommands_name'), '/', variables('subscriptions_gopigo_name'))]",
+      "apiVersion": "2015-08-01",
+      "location": "West Europe",
+      "properties": {
+        "lockDuration": "00:01:00",
+        "requiresSession": false,
+        "defaultMessageTimeToLive": "00:00:10",
+        "deadLetteringOnMessageExpiration": false,
+        "deadLetteringOnFilterEvaluationExceptions": true,
+        "maxDeliveryCount": 10,
+        "enableBatchedOperations": false
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_iotgame_name'))]",
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_iotgame_name'), variables('topics_drivecommands_name'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions",
+      "name": "[concat(parameters('namespaces_iotgame_name'), '/', variables('topics_reportback_name'), '/', variables('subscriptions_control_name'))]",
+      "apiVersion": "2015-08-01",
+      "location": "West Europe",
+      "properties": {
+        "lockDuration": "00:01:00",
+        "requiresSession": false,
+        "defaultMessageTimeToLive": "00:00:10",
+        "deadLetteringOnMessageExpiration": false,
+        "deadLetteringOnFilterEvaluationExceptions": true,
+        "maxDeliveryCount": 10,
+        "enableBatchedOperations": false
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_iotgame_name'))]",
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_iotgame_name'), variables('topics_reportback_name'))]"
+      ]
+    }
+  ]
+}
