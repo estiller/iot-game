@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
-    <ProjectGuid>{180BDFC1-1458-4928-969B-8C50EF9B1927}</ProjectGuid>
+    <ProjectGuid>{2FBE720A-0E50-49E7-B68B-EF9D35CBBF4A}</ProjectGuid>
     <OutputType>AppContainerExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>IoTGame.RobotWinApp</RootNamespace>
-    <AssemblyName>IoTGame.RobotWinApp</AssemblyName>
+    <RootNamespace>IoTGame.ControlWinApp</RootNamespace>
+    <AssemblyName>IoTGame.ControlWinApp</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.14393.0</TargetPlatformVersion>
@@ -17,7 +17,7 @@
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WindowsXamlEnableOverview>true</WindowsXamlEnableOverview>
-    <PackageCertificateKeyFile>IoTGame.RobotWinApp_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateKeyFile>IoTGame.ControlWinApp_TemporaryKey.pfx</PackageCertificateKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -88,14 +88,14 @@
     <Prefer32Bit>true</Prefer32Bit>
     <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
   </PropertyGroup>
-  <PropertyGroup>
-    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
-  </PropertyGroup>
+  <ItemGroup>
+    <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
+    <None Include="project.json" />
+  </ItemGroup>
   <ItemGroup>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="GoPiGo\WindowsIoTPlatform.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -105,7 +105,7 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
-    <None Include="IoTGame.RobotWinApp_TemporaryKey.pfx" />
+    <None Include="IoTGame.ControlWinApp_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Properties\Default.rd.xml" />
@@ -128,20 +128,12 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
-      <Version>5.4.0</Version>
-    </PackageReference>
-    <PackageReference Include="Polly">
-      <Version>5.3.1</Version>
-    </PackageReference>
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\IoTGame.AppCommon\IoTGame.AppCommon.csproj">
-      <Project>{D9C9206F-0CCE-46FE-8D33-4B8DACDADFE9}</Project>
+      <Project>{d9c9206f-0cce-46fe-8d33-4b8dacdadfe9}</Project>
       <Name>IoTGame.AppCommon</Name>
     </ProjectReference>
     <ProjectReference Include="..\IoTGame.Constants\IoTGame.Constants.csproj">
-      <Project>{4c130398-e6ea-4968-94db-07a1c09d3d43}</Project>
+      <Project>{34916319-c1dc-45ad-b89b-87f7ecbb4e5c}</Project>
       <Name>IoTGame.Constants</Name>
     </ProjectReference>
     <ProjectReference Include="..\IoTGame.Controller\IoTGame.Controller.csproj">
@@ -151,10 +143,6 @@
     <ProjectReference Include="..\IoTGame.Driver\IoTGame.Driver.csproj">
       <Project>{47379e0c-c9f7-4d08-9289-6f87eb1bf2c6}</Project>
       <Name>IoTGame.Driver</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\IoTGame.GoPiGo\IoTGame.GoPiGo.csproj">
-      <Project>{4eadf1a5-4b02-4a80-b13a-85ead6b2eac2}</Project>
-      <Name>IoTGame.GoPiGo</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">

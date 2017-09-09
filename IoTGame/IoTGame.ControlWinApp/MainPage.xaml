@@ -1,7 +1,8 @@
 ﻿<Page
-    x:Class="IoTGame.RobotWinApp.MainPage"
+    x:Class="IoTGame.ControlWinApp.MainPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:IoTGame.ControlWinApp"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:IoTGame.AppCommon.Controls"
@@ -9,16 +10,11 @@
 
     <StackPanel Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <StackPanel>
-            <TextBlock Text="Robot State" Style="{ThemeResource BaseTextBlockStyle}"/>
+            <TextBlock Text="App State" Style="{ThemeResource BaseTextBlockStyle}"/>
             <StackPanel Orientation="Horizontal">
-                <RadioButton Content="On" Tag="On" Checked="RobotState_Checked" IsChecked="True"/>
-                <RadioButton Content="Off" Tag="Off" Checked="RobotState_Checked"/>
+                <RadioButton Content="On" Tag="On" Checked="AppState_Checked" IsChecked="True"/>
+                <RadioButton Content="Off" Tag="Off" Checked="AppState_Checked"/>
             </StackPanel>
-        </StackPanel>
-
-        <StackPanel Orientation="Horizontal">
-            <TextBlock Text="Firmware Version: "/>
-            <TextBlock Name="FirmwareVersionText" Foreground="Red" />
         </StackPanel>
 
         <StackPanel Orientation="Horizontal">
