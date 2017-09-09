@@ -6,6 +6,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using IoTGame.AppCommon.Controller;
 using IoTGame.Constants;
+using IoTGame.ControlWinApp.IoTHub;
 using IoTGame.Driver;
 
 namespace IoTGame.ControlWinApp
@@ -16,7 +17,8 @@ namespace IoTGame.ControlWinApp
 
         public MainPage()
         {
-            var driver = new ServiceBusDriver();
+            //var driver = new ServiceBusDriver();
+            var driver = new IoTHubDriver();
             driver.ReportBackAvailable += OnReportBackAvailable;
             var eventDecorator = new EventDriverDecorator(driver);
             eventDecorator.DriveCommandAvailable += DriveCommandAvailable;
