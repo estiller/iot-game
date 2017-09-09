@@ -1,10 +1,11 @@
 ﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 
 namespace IoTGame.Driver
 {
     public class DriveCommand
     {
+        [JsonProperty("playerid")]
+        public string PlayerId { get; set; }
         [JsonProperty("motionvector")]
         public Vector MotionVector { get; set; }
         [JsonProperty("sensorvector")]

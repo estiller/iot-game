@@ -15,10 +15,13 @@ namespace IoTGame.AppCommon.Controller
         private Task _loopTask;
         private Gamepad _gamepad;
 
-        public GamepadController(IDriver driver)
+        public GamepadController(string playerId, IDriver driver)
         {
+            PlayerId = playerId;
             _driver = driver;
         }
+
+        public string PlayerId { get; set; }
 
         public async Task StartAsync()
         {
@@ -78,6 +81,7 @@ namespace IoTGame.AppCommon.Controller
                 var reading = _gamepad.GetCurrentReading();
                 await _driver.DriveAsync(new DriveCommand
                 {
+                    PlayerId = PlayerId,
                     MotionVector = new Vector(reading.LeftThumbstickX, reading.LeftThumbstickY),
                     SensorVector = new Vector(reading.RightThumbstickX, reading.RightThumbstickY)
                 });

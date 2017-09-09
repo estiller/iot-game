@@ -5,14 +5,14 @@ using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using IoTGame.AppCommon.Controller;
-using IoTGame.Controller;
+using IoTGame.Constants;
 using IoTGame.Driver;
 
 namespace IoTGame.ControlWinApp
 {
     public sealed partial class MainPage
     {
-        private readonly IController _controller;
+        private readonly GamepadController _controller;
 
         public MainPage()
         {
@@ -20,7 +20,7 @@ namespace IoTGame.ControlWinApp
             driver.ReportBackAvailable += OnReportBackAvailable;
             var eventDecorator = new EventDriverDecorator(driver);
             eventDecorator.DriveCommandAvailable += DriveCommandAvailable;
-            _controller = new GamepadController(eventDecorator);
+            _controller = new GamepadController(PlayerIds.White, eventDecorator);
 
             InitializeComponent();
         }
@@ -72,6 +72,21 @@ namespace IoTGame.ControlWinApp
         private async Task StopApp()
         {
             await _controller.StopAsync();
+        }
+
+        private void Player_Checked(object sender, RoutedEventArgs e)
+        {
+            var radioButton = (RadioButton)sender;
+            string state = radioButton.Tag.ToString();
+            switch (state)
+            {
+                case "White":
+                    _controller.PlayerId = PlayerIds.White;
+                    break;
+                case "Red":
+                    _controller.PlayerId = PlayerIds.Red;
+                    break;
+            }
         }
     }
 }

@@ -23,8 +23,9 @@ namespace IoTGame.RobotWinApp
             var driver = new GoPiGoDriver(robot);
             var eventDecorator = new EventDriverDecorator(driver);
             eventDecorator.DriveCommandAvailable += DriveCommandAvailable;
-            //_controller = new GamepadController(eventDecorator);
-            var serviceBusController = new ServiceBusController(eventDecorator, ServiceBusConstants.DeviceSubscriptionName);
+            //_controller = new GamepadController(PlayerIds.White, eventDecorator);
+            var playerFilter = new PlayerFilterDecorator(PlayerIds.White, eventDecorator);
+            var serviceBusController = new ServiceBusController(playerFilter, ServiceBusConstants.DeviceSubscriptionName);
             _controller = serviceBusController;
 
             _updateTimer = new DispatcherTimer {Interval = TimeSpan.FromSeconds(1)};

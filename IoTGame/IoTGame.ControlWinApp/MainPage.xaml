@@ -12,8 +12,16 @@
         <StackPanel>
             <TextBlock Text="App State" Style="{ThemeResource BaseTextBlockStyle}"/>
             <StackPanel Orientation="Horizontal">
-                <RadioButton Content="On" Tag="On" Checked="AppState_Checked" IsChecked="True"/>
-                <RadioButton Content="Off" Tag="Off" Checked="AppState_Checked"/>
+                <RadioButton Content="On" Tag="On" GroupName="AppState" Checked="AppState_Checked" IsChecked="True"/>
+                <RadioButton Content="Off" Tag="Off" GroupName="AppState" Checked="AppState_Checked"/>
+            </StackPanel>
+        </StackPanel>
+
+        <StackPanel>
+            <TextBlock Text="Player" Style="{ThemeResource BaseTextBlockStyle}"/>
+            <StackPanel Orientation="Horizontal">
+                <RadioButton Content="White" Tag="White" GroupName="Player" Checked="Player_Checked" IsChecked="True"/>
+                <RadioButton Content="Red" Tag="Red" GroupName="Player" Checked="Player_Checked"/>
             </StackPanel>
         </StackPanel>
 
