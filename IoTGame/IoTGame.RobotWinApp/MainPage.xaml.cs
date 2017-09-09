@@ -6,10 +6,10 @@ using Windows.UI.Xaml.Controls;
 using IoTGame.Controller;
 using IoTGame.Driver;
 using IoTGame.GoPiGo;
-using IoTGame.WinApp.Controller;
-using IoTGame.WinApp.GoPiGo;
+using IoTGame.RobotWinApp.Controller;
+using IoTGame.RobotWinApp.GoPiGo;
 
-namespace IoTGame.WinApp
+namespace IoTGame.RobotWinApp
 {
     public sealed partial class MainPage
     {

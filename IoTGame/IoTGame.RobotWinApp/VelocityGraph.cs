@@ -6,7 +6,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Shapes;
 
-namespace IoTGame.WinApp
+namespace IoTGame.RobotWinApp
 {
     public sealed class VelocityGraph : Control
     {

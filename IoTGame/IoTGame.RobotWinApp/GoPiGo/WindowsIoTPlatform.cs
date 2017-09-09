@@ -7,7 +7,7 @@ using Windows.Devices.I2c;
 using IoTGame.GoPiGo.Platform;
 using Polly;
 
-namespace IoTGame.WinApp.GoPiGo
+namespace IoTGame.RobotWinApp.GoPiGo
 {
     public class WindowsIoTPlatform : IPlatform
     {

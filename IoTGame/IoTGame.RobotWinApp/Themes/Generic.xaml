@@ -1,7 +1,7 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:IoTGame.WinApp">
+    xmlns:local="using:IoTGame.RobotWinApp">
 
     <Style TargetType="local:VelocityGraph">
         <Setter Property="Template">

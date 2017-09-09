@@ -5,7 +5,7 @@ using Windows.Gaming.Input;
 using IoTGame.Controller;
 using IoTGame.Driver;
 
-namespace IoTGame.WinApp.Controller
+namespace IoTGame.RobotWinApp.Controller
 {
     public class GamepadController : IController
     {

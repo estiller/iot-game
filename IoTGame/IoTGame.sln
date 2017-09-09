@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26730.12
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IoTGame.WinApp", "IoTGame.WinApp\IoTGame.WinApp.csproj", "{180BDFC1-1458-4928-969B-8C50EF9B1927}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IoTGame.RobotWinApp", "IoTGame.RobotWinApp\IoTGame.RobotWinApp.csproj", "{180BDFC1-1458-4928-969B-8C50EF9B1927}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IoTGame.GoPiGo", "IoTGame.GoPiGo\IoTGame.GoPiGo.csproj", "{4EADF1A5-4B02-4A80-B13A-85EAD6B2EAC2}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IoTGame.Driver", "IoTGame.Driver\IoTGame.Driver.csproj", "{47379E0C-C9F7-4D08-9289-6F87EB1BF2C6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IoTGame.Controller", "IoTGame.Controller\IoTGame.Controller.csproj", "{FA77DDB1-3CAD-4350-90A2-5567C093D2FD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IoTGame.Controller", "IoTGame.Controller\IoTGame.Controller.csproj", "{FA77DDB1-3CAD-4350-90A2-5567C093D2FD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
