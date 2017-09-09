@@ -4,14 +4,25 @@
   "parameters": {
     "namespaces_iotgame_name": {
       "type": "string"
+    },
+    "storageAccounts_iotgamefunctionsstorage_name": {
+      "type": "string"
+    },
+    "IotHubs_iotgame_name": {
+      "type": "string"
+    },
+    "sites_iotgamefunctions_name": {
+      "type": "string"
     }
   },
   "variables": {
     "topics_reportback_name": "reportback",
     "topics_drivecommands_name": "drivecommands",
     "subscriptions_control_name": "control",
+    "subscriptions_function_name": "function",
     "subscriptions_gopigo_name": "gopigo",
-    "AuthorizationRules_RootManageSharedAccessKey_name": "RootManageSharedAccessKey"
+    "AuthorizationRules_RootManageSharedAccessKey_name": "RootManageSharedAccessKey",
+    "serverfarms_WestEuropePlan_name": "WestEuropePlan"
   },
   "resources": [
     {
@@ -123,6 +134,107 @@
       "dependsOn": [
         "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_iotgame_name'))]",
         "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_iotgame_name'), variables('topics_reportback_name'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions",
+      "name": "[concat(parameters('namespaces_iotgame_name'), '/', variables('topics_reportback_name'), '/', variables('subscriptions_function_name'))]",
+      "apiVersion": "2015-08-01",
+      "location": "West Europe",
+      "properties": {
+        "lockDuration": "00:01:00",
+        "requiresSession": false,
+        "defaultMessageTimeToLive": "00:00:10",
+        "deadLetteringOnMessageExpiration": false,
+        "deadLetteringOnFilterEvaluationExceptions": true,
+        "maxDeliveryCount": 10,
+        "enableBatchedOperations": false
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_iotgame_name'))]",
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_iotgame_name'), variables('topics_reportback_name'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.Devices/IotHubs",
+      "sku": {
+        "name": "F1",
+        "tier": "Free",
+        "capacity": 1
+      },
+      "name": "[parameters('IotHubs_iotgame_name')]",
+      "apiVersion": "2016-02-03",
+      "location": "westeurope",
+      "properties": {
+        "eventHubEndpoints": {
+          "events": {
+            "retentionTimeInDays": 1,
+            "partitionCount": 2,
+            "path": "[concat('iothub-ehub-', parameters('IotHubs_iotgame_name'),'-215941-9f78350416')]"
+          },
+          "operationsMonitoringEvents": {
+            "retentionTimeInDays": 1,
+            "partitionCount": 2,
+            "path": "[concat('iothub-ehub-', parameters('IotHubs_iotgame_name'),'-215941-1c6d51efb6')]"
+          }
+        },
+        "enableFileUploadNotifications": false,
+        "cloudToDevice": {
+          "maxDeliveryCount": 10,
+          "defaultTtlAsIso8601": "PT1H",
+          "feedback": {
+            "lockDurationAsIso8601": "PT1M",
+            "ttlAsIso8601": "PT1H",
+            "maxDeliveryCount": 10
+          }
+        },
+        "features": "None"
+      },
+      "dependsOn": []
+    },
+    {
+      "type": "Microsoft.Storage/storageAccounts",
+      "sku": {
+        "name": "Standard_LRS",
+        "tier": "Standard"
+      },
+      "kind": "Storage",
+      "name": "[parameters('storageAccounts_iotgamefunctionsstorage_name')]",
+      "apiVersion": "2016-01-01",
+      "location": "westeurope",
+      "properties": {},
+      "dependsOn": []
+    },
+    {
+      "type": "Microsoft.Web/serverfarms",
+      "sku": {
+        "name": "Y1",
+        "tier": "Dynamic",
+        "size": "Y1",
+        "family": "Y",
+        "capacity": 0
+      },
+      "kind": "functionapp",
+      "name": "[variables('serverfarms_WestEuropePlan_name')]",
+      "apiVersion": "2016-09-01",
+      "location": "West Europe",
+      "properties": {
+        "name": "[variables('serverfarms_WestEuropePlan_name')]"
+      },
+      "dependsOn": []
+    },
+    {
+      "type": "Microsoft.Web/sites",
+      "kind": "functionapp",
+      "name": "[parameters('sites_iotgamefunctions_name')]",
+      "apiVersion": "2016-08-01",
+      "location": "West Europe",
+      "properties": {
+        "enabled": true,
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('serverfarms_WestEuropePlan_name'))]"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/serverfarms', variables('serverfarms_WestEuropePlan_name'))]"
       ]
     }
   ]

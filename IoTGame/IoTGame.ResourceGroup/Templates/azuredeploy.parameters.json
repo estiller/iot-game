@@ -4,6 +4,15 @@
   "parameters": {
     "namespaces_iotgame_name": {
       "value": "iotgame"
+    },
+    "storageAccounts_iotgamefunctionsstorage_name": {
+      "value": "iotgamefunctionsstorage"
+    },
+    "IotHubs_iotgame_name": {
+      "value": "iotgame"
+    },
+    "sites_iotgamefunctions_name": {
+      "value": "iotgamefunctions"
     }
   }
 }
