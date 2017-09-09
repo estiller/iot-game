@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using IoTGame.Constants;
 using IoTGame.Driver;
 using Microsoft.Azure.ServiceBus;
+using Microsoft.Azure.ServiceBus.InteropExtensions;
 using Newtonsoft.Json;
 
 namespace IoTGame.Controller
@@ -64,9 +65,14 @@ namespace IoTGame.Controller
 
         private Task HandleMessageAsync(Message message, CancellationToken cancellationToken)
         {
-            var json = Encoding.UTF8.GetString(message.Body);
+            var json = IsSelfSerialized(message) ? Encoding.UTF8.GetString(message.Body) : message.GetBody<string>();
             var command = JsonConvert.DeserializeObject<DriveCommand>(json);
             return _driver.DriveAsync(command);
+
+            bool IsSelfSerialized(Message m)
+            {
+                return m.UserProperties.ContainsKey("SelfSerialized");
+            }
         }
 
         private Task HandleExceptionAsync(ExceptionReceivedEventArgs args)

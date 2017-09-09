@@ -29,7 +29,10 @@ namespace IoTGame.Driver
         public async Task DriveAsync(DriveCommand drive)
         {
             var json = JsonConvert.SerializeObject(drive);
-            var message = new Message(Encoding.UTF8.GetBytes(json));
+            var message = new Message(Encoding.UTF8.GetBytes(json))
+            {
+                UserProperties = {["SelfSerialized"] = true}
+            };
             await _topicClient.SendAsync(message);
         }
 
