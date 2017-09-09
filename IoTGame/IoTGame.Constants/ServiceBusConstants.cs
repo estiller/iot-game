@@ -11,5 +11,7 @@
         public const string DeviceSubscriptionName = "gopigo";
 
         public const string ControlSubscriptionName = "control";
+
+        public const string FunctionSubscriptionName = "function";
     }
 }
