@@ -3,7 +3,6 @@ using System.IO;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Windows.ApplicationModel.Email.DataProvider;
 using IoTGame.Constants;
 using IoTGame.Driver;
 using Microsoft.Azure.Devices.Client;
@@ -13,10 +12,17 @@ namespace IoTGame.ControlWinApp.IoTHub
 {
     public class IoTHubDriver : IDriver
     {
+        private readonly bool _sendCommands;
+
         private DeviceClient _deviceClient;
 
         private CancellationTokenSource _cancellationTokenSource;
         private Task _recieveTask;
+
+        public IoTHubDriver(bool sendCommands = true)
+        {
+            _sendCommands = sendCommands;
+        }
 
         public async Task StartAsync()
         {
@@ -29,6 +35,9 @@ namespace IoTGame.ControlWinApp.IoTHub
 
         public async Task DriveAsync(DriveCommand drive)
         {
+            if (!_sendCommands)
+                return;
+
             var json = JsonConvert.SerializeObject(drive);
             var message = new Message(Encoding.UTF8.GetBytes(json));
             await _deviceClient.SendEventAsync(message);

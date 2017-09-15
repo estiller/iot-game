@@ -17,14 +17,6 @@
             </StackPanel>
         </StackPanel>
 
-        <StackPanel>
-            <TextBlock Text="Player" Style="{ThemeResource BaseTextBlockStyle}"/>
-            <StackPanel Orientation="Horizontal">
-                <RadioButton Content="White" Tag="White" GroupName="Player" Checked="Player_Checked" IsChecked="True"/>
-                <RadioButton Content="Red" Tag="Red" GroupName="Player" Checked="Player_Checked"/>
-            </StackPanel>
-        </StackPanel>
-
         <StackPanel Orientation="Horizontal">
             <TextBlock Text="Battery Voltage: "/>
             <TextBlock Name="BatteryVoltageText" Foreground="Red" />
@@ -35,6 +27,9 @@
             <TextBlock Name="DistanceText" Foreground="Red" />
         </StackPanel>
 
-        <controls:VelocityGraph Width="400" Height="400" Background="Blue" VectorX="380" VectorY="200" x:Name="VelocityGraph"/>
+        <StackPanel Orientation="Horizontal">
+            <controls:VelocityGraph Width="400" Height="400" Background="Blue" VectorX="380" VectorY="200" Margin="10" x:Name="VelocityGraphWhite"/>
+            <controls:VelocityGraph Width="400" Height="400" Background="Red" VectorX="380" VectorY="200" Margin="10" x:Name="VelocityGraphRed"/>
+        </StackPanel>
     </StackPanel>
 </Page>

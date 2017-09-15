@@ -4,8 +4,9 @@ using System.Threading.Tasks;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using IoTGame.AppCommon.Controller;
+using IoTGame.AppCommon.Controls;
 using IoTGame.Constants;
+using IoTGame.Controller;
 using IoTGame.ControlWinApp.IoTHub;
 using IoTGame.Driver;
 
@@ -13,16 +14,16 @@ namespace IoTGame.ControlWinApp
 {
     public sealed partial class MainPage
     {
-        private readonly GamepadController _controller;
+        private readonly IController _controller;
 
         public MainPage()
         {
             //var driver = new ServiceBusDriver();
-            var driver = new IoTHubDriver();
+            var driver = new IoTHubDriver(false);
             driver.ReportBackAvailable += OnReportBackAvailable;
             var eventDecorator = new EventDriverDecorator(driver);
             eventDecorator.DriveCommandAvailable += DriveCommandAvailable;
-            _controller = new GamepadController(PlayerIds.White, eventDecorator);
+            _controller = new ServiceBusController(eventDecorator, ServiceBusConstants.ControlSubscriptionName);
 
             InitializeComponent();
         }
@@ -47,8 +48,20 @@ namespace IoTGame.ControlWinApp
                 return;
             }
 
-            VelocityGraph.VectorX = args.Command.MotionVector.X;
-            VelocityGraph.VectorY = args.Command.MotionVector.Y;
+            VelocityGraph velocityGraph;
+            switch (args.Command.PlayerId)
+            {
+                case PlayerIds.White:
+                    velocityGraph = VelocityGraphWhite;
+                    break;
+                case PlayerIds.Red:
+                    velocityGraph = VelocityGraphRed;
+                    break;
+                default:
+                    throw new Exception();
+            }
+            velocityGraph.VectorX = args.Command.MotionVector.X;
+            velocityGraph.VectorY = args.Command.MotionVector.Y;
         }
 
         private async void AppState_Checked(object sender, RoutedEventArgs e)
@@ -76,19 +89,19 @@ namespace IoTGame.ControlWinApp
             await _controller.StopAsync();
         }
 
-        private void Player_Checked(object sender, RoutedEventArgs e)
-        {
-            var radioButton = (RadioButton)sender;
-            string state = radioButton.Tag.ToString();
-            switch (state)
-            {
-                case "White":
-                    _controller.PlayerId = PlayerIds.White;
-                    break;
-                case "Red":
-                    _controller.PlayerId = PlayerIds.Red;
-                    break;
-            }
-        }
+        //private void Player_Checked(object sender, RoutedEventArgs e)
+        //{
+        //    var radioButton = (RadioButton)sender;
+        //    string state = radioButton.Tag.ToString();
+        //    switch (state)
+        //    {
+        //        case "White":
+        //            _controller.PlayerId = PlayerIds.White;
+        //            break;
+        //        case "Red":
+        //            _controller.PlayerId = PlayerIds.Red;
+        //            break;
+        //    }
+        //}
     }
 }
