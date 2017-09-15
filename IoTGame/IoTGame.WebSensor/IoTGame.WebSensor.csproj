@@ -111,11 +111,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Images\blue-ball.png" />
     <Content Include="Content\Images\ClientBlueSquare.png" />
     <Content Include="Content\Images\ClientRedSquare.png" />
     <Content Include="Content\Images\html5_logo.png" />
-    <Content Include="Content\Images\red-ball.png" />
+    <Content Include="Content\Images\led-lamp-blue-on-100px.png" />
+    <Content Include="Content\Images\led-lamp-red-on-100px.png" />
     <Content Include="Content\materialize.css" />
     <Content Include="Content\materialize.min.css" />
     <Content Include="Content\Site.css" />
