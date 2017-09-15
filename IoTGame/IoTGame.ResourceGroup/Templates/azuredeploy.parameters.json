@@ -5,6 +5,9 @@
     "namespaces_iotgame_name": {
       "value": "iotgame"
     },
+    "namespaces_iotgameweb_name": {
+      "value": "iotgameweb"
+    },
     "storageAccounts_iotgamefunctionsstorage_name": {
       "value": "iotgamefunctionsstorage"
     },

@@ -5,6 +5,9 @@
     "namespaces_iotgame_name": {
       "type": "string"
     },
+    "namespaces_iotgameweb_name": {
+      "type": "string"
+    },
     "storageAccounts_iotgamefunctionsstorage_name": {
       "type": "string"
     },
@@ -22,7 +25,8 @@
     "subscriptions_function_name": "function",
     "subscriptions_gopigo_name": "gopigo",
     "AuthorizationRules_RootManageSharedAccessKey_name": "RootManageSharedAccessKey",
-    "serverfarms_WestEuropePlan_name": "WestEuropePlan"
+    "serverfarms_WestEuropePlan_name": "WestEuropePlan",
+    "eventhub_web_name": "web" 
   },
   "resources": [
     {
@@ -101,6 +105,25 @@
     {
       "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions",
       "name": "[concat(parameters('namespaces_iotgame_name'), '/', variables('topics_drivecommands_name'), '/', variables('subscriptions_gopigo_name'))]",
+      "apiVersion": "2015-08-01",
+      "location": "West Europe",
+      "properties": {
+        "lockDuration": "00:01:00",
+        "requiresSession": false,
+        "defaultMessageTimeToLive": "00:00:10",
+        "deadLetteringOnMessageExpiration": false,
+        "deadLetteringOnFilterEvaluationExceptions": true,
+        "maxDeliveryCount": 10,
+        "enableBatchedOperations": false
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_iotgame_name'))]",
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_iotgame_name'), variables('topics_drivecommands_name'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions",
+      "name": "[concat(parameters('namespaces_iotgame_name'), '/', variables('topics_drivecommands_name'), '/', variables('subscriptions_control_name'))]",
       "apiVersion": "2015-08-01",
       "location": "West Europe",
       "properties": {
@@ -235,6 +258,61 @@
       },
       "dependsOn": [
         "[resourceId('Microsoft.Web/serverfarms', variables('serverfarms_WestEuropePlan_name'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.EventHub/namespaces",
+      "sku": {
+        "name": "Standard",
+        "tier": "Standard",
+        "capacity": 1
+      },
+      "kind": "EventHub",
+      "name": "[parameters('namespaces_iotgameweb_name')]",
+      "apiVersion": "2015-08-01",
+      "location": "West Europe"
+    },
+    {
+      "type": "Microsoft.EventHub/namespaces/AuthorizationRules",
+      "name": "[concat(parameters('namespaces_iotgameweb_name'), '/', variables('AuthorizationRules_RootManageSharedAccessKey_name'))]",
+      "apiVersion": "2015-08-01",
+      "properties": {
+        "rights": [
+          "Listen",
+          "Manage",
+          "Send"
+        ]
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.EventHub/namespaces', parameters('namespaces_iotgameweb_name'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.EventHub/namespaces/eventhubs",
+      "name": "[concat(parameters('namespaces_iotgameweb_name'), '/', variables('eventhub_web_name'))]",
+      "apiVersion": "2015-08-01",
+      "location": "West Europe",
+      "properties": {
+        "messageRetentionInDays": 1,
+        "partitionCount": 2
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.EventHub/namespaces', parameters('namespaces_iotgameweb_name'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.EventHub/namespaces/eventhubs/authorizationRules",
+      "name": "[concat(parameters('namespaces_iotgameweb_name'), '/', variables('eventhub_web_name'), '/web_ingress')]",
+      "apiVersion": "2015-08-01",
+      "location": "West Europe",
+      "properties": {
+        "rights": [
+          "Send"
+        ]
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.EventHub/namespaces', parameters('namespaces_iotgameweb_name'))]",
+        "[resourceId('Microsoft.EventHub/namespaces/eventhubs', parameters('namespaces_iotgameweb_name'), variables('eventhub_web_name'))]"
       ]
     }
   ]
