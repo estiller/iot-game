@@ -1,0 +1,150 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta http-equiv="x-ua-compatible" content="IE=edge" />
+    <title>Index</title>
+    <style>
+        body{
+            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+        }
+        pre {
+            font-size: 0.8em;
+            font-family: Consolas, Courier New, Courier, monospace;
+            border: solid 1px lightgray;
+            overflow: auto;
+            box-shadow: inset 0 0 5px 5px rgba(0,0,0,0.5);
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <p>
+            Please refresh and submit, once for portrait and once for landscape. If you can refresh and submit for
+            both landscape sides (left and right), that would be even better. Thank you.
+        </p>
+    </div>
+    <div>
+        <button id="refresh">Refresh</button>
+        <button id="submit" style="width: 150px;">Submit</button>
+    </div>
+
+    <pre id="output"></pre>
+
+    <script>
+        var PROP_NAME = 'orientation';
+
+        function windowNavigator() {
+            var props = ['appCodeName', 'appName', 'appVersion', 'languages', 'languages', 'maxTouchPoints', 'product', 'productSub', 'userAgent', 'vendor', 'vendorSub']
+            
+            return copyProps(navigator, props);
+        }
+
+        function copyProps(source, props) {
+            var result = {};
+            props.forEach(function (prop) {
+                var value = source[prop];
+                result[prop] = value;
+            });
+            return result;
+        }
+
+        function windowOrientation() {
+            var supported = PROP_NAME in window;
+            var event = supported && ('onorientationchange' in window);
+            return {
+                supported: supported,
+                valueType: supported ? typeof window[PROP_NAME] : 'undefined',
+                value: supported ? window.orientation : 'undefined',
+                event: event,
+                eventName: event ? 'onorientationchange' : 'undefined'
+            };
+        }
+
+        function windowScreen() {
+            var props = Object.keys(screen);
+            if (props.length === 0) {
+                props = Object.keys(Object.getPrototypeOf(screen));
+            }
+
+            return copyProps(window.screen, props);
+        }
+
+        var details;
+        var deviceOrientation = {};
+
+        function prepareDetails() {
+            details = {
+                navigator: windowNavigator(),
+                orientation: windowOrientation(),
+                screen: windowScreen(),
+                deviceOrienation: deviceOrientation
+            };
+            document.getElementById('output').innerHTML = JSON.stringify(details, null, 2);
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            prepareDetails();
+
+            document.getElementById('refresh').addEventListener('click', function () {
+                prepareDetails();
+            });
+
+            var submit = document.getElementById('submit');
+
+            submit.addEventListener('click', function () {
+                submit.innerHTML = 'Submitting...';
+                submit.disabled = true;
+
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', '/ScreenOrientation/Details/');
+                xhr.setRequestHeader('Content-Type', 'application/json');
+                xhr.onreadystatechange = function () {
+                    if (this.readyState !== 4) {
+                        return;
+                    }
+
+                    if (this.status === 200) {
+                        submit.innerHTML = 'Submit Successfull';
+                        setTimeout(function () {
+                            submit.innerHTML = 'Submit';
+                            submit.disabled = false;
+                        }, 2000);
+                    } else {
+                        submit.innerHTML = 'Submit Failed';
+                        setTimeout(function () {
+                            submit.innerHTML = 'Submit';
+                            submit.disabled = false;
+                        }, 2000);
+                    }
+                };
+                xhr.send(JSON.stringify(details, null, 2));
+            });
+        });
+
+        (function () {
+            window.addEventListener('deviceorientation', function (e) {
+                deviceOrientation.alpha = e.alpha;
+                deviceOrientation.beta = e.beta;
+                deviceOrientation.gamma = e.gamma;
+
+                deviceOrientation.angle = Math.round(-e.gamma / 90) * 90;
+
+                if (deviceOrientation.angle == 0 && e.beta < 0) {
+                    deviceOrientation.angle = 180;
+                }
+
+                prepareDetails();
+            });
+        }());
+
+    </script>
+</body>
+</html>

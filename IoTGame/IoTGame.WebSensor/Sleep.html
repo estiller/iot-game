@@ -1,0 +1,20 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+</head>
+<body>
+    <button onclick="sleep.prevent()">Start</button>
+    <button onclick="sleep.allow()">Stop</button>
+
+    <div id="time"></div>
+
+    <script>
+        var time = document.getElementById('time');
+        setInterval(function () {
+            time.innerText = new Date().toString();
+        }, 1000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,85 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <style>
+        .garden {
+            position: relative;
+            width: 190px;
+            height: 190px;
+            border: 5px solid #CCC;
+            border-radius: 10px;
+        }
+
+        .ball {
+            position: absolute;
+            top: 90px;
+            left: 90px;
+            width: 10px;
+            height: 10px;
+            background: green;
+            border-radius: 100%;
+        }
+
+        pre {
+            font-size: 30px;
+        }
+    </style>
+</head>
+<body>
+    <svg xmlns="http://www.w3.org/2000/svg"
+         width="500"
+         height="500"
+         viewBox="-95 -95 190 190">
+        <line x1="-90"
+              x2="90"
+              y1="0"
+              y2="0"
+              stroke="#ccc" />
+        <line x1="0"
+              x2="0"
+              y1="-90"
+              y2="90"
+              stroke="#ccc" />
+        <circle r="90"
+                stroke="#ccc"
+                fill="transparent"
+                cx="0"
+                cy="0" />
+        <circle id="indicator"
+                fill="black"
+                r="5"
+                cx="0"
+                cy="0" />
+    </svg>
+
+    <pre class="output"></pre>
+
+    <script>
+        var indicator = document.getElementById('indicator');
+        var output = document.querySelector('.output');
+
+        function handleOrientation(event) {
+            output.innerHTML = "beta : " + event.beta + "\n"
+                             + "gamma: " + event.gamma + "\n";
+
+            var y = event.beta || 0;  // In degree in the range [-180,180]
+            var x = event.gamma || 0; // In degree in the range [-90,90]
+
+            // Because we don't want to have the device upside down
+            // We constrain the x value to the range [-90,90]
+            if (y > 90) {
+                y = 90
+            }
+            if (y < -90) {
+                y = -90
+            }
+
+            indicator.setAttribute('cx', x);
+            indicator.setAttribute('cy', y);
+        }
+
+        window.addEventListener('deviceorientation', handleOrientation);
+    </script>
+</body>
+</html>

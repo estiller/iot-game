@@ -1,0 +1,63 @@
+﻿@{
+}
+
+<div class="content animate">
+    <div id="first-page" class="pink lighten-5">
+        <div class="message orientation-message red lighten-2 z-depth-1">
+            <i class="mdi-alert-error medium" style="float: left;"></i>
+            <div>This device does not support the DeviceOrientationEvent and cannot join the experiment</div>
+        </div>
+        <form id="login-form" class="z-depth-1">
+            <div class="row">
+                <div class="input-field">
+                    <i class="mdi-communication-email prefix"></i>
+                    <input id="email" name="email" type="email" class="validate">
+                    <label for="email">Email</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="switch" style="margin-left: 3.75rem;">
+                    <label class="valign-wrapper">
+                        <img src="~/Content/Images/red-ball.png" style="width: 60px;" />
+                        <input type="checkbox" name="group">
+                        <span class="lever"></span>
+                        <img src="~/Content/Images/blue-ball.png" style="width: 60px;" />
+                    </label>
+                </div>
+            </div>
+            <div class="row">
+                <button style="margin: 0 auto; display: block;" class="btn waves-effect waves-light btn-large" type="submit" name="action">
+                    Submit
+                    <i class="mdi-content-send right"></i>
+                </button>
+            </div>
+        </form>
+
+        <div class="z-depth-1 message deep-orange screen-orientation-message">
+            <i class="mdi-action-announcement medium"></i>
+            <div>Screen orientation detection is not supported on this device. Please switch to Portrait mode</div>
+        </div>
+    </div>
+    <div id="second-page" style="position: relative;">
+        <div class="z-depth-1">
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 style="max-height: calc(100vh - 40px); display: block;"
+                 viewBox="-95 -95 190 190">
+                <circle id="indicator"
+                        fill="black"
+                        r="5"
+                        cx="0"
+                        cy="0" />
+            </svg>
+        </div>
+
+        <video id="sleeper" loop="loop" controls style="position: absolute; bottom: 0px; left: -20px; width: 10px; height: 10px;">
+            <source src="~/Content/Videos/muted-blank.mp4" type="video/mp4">
+            <source src="~/Content/Videos/muted-blank.ogv" type="video/ogg">
+        </video>
+    </div>
+</div>
+
+
+
+
