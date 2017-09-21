@@ -25,7 +25,7 @@ namespace IoTGame.RobotWinApp
             eventDecorator.DriveCommandAvailable += DriveCommandAvailable;
             //_controller = new GamepadController(PlayerIds.White, eventDecorator);
             var playerFilter = new PlayerFilterDecorator(PlayerIds.White, eventDecorator);
-            var serviceBusController = new ServiceBusController(playerFilter, ServiceBusConstants.DeviceSubscriptionName);
+            var serviceBusController = new ServiceBusController(PlayerIds.White, playerFilter, ServiceBusConstants.DeviceSubscriptionName);
             _controller = serviceBusController;
 
             _updateTimer = new DispatcherTimer {Interval = TimeSpan.FromSeconds(1)};

@@ -47,25 +47,26 @@ namespace IoTGame.Driver
 
         public event EventHandler<ReportBackEventArgs> ReportBackAvailable;
 
-        private void OnReportBackAvailable(int distanceCm, decimal voltage)
+        private void OnReportBackAvailable(string playerId, int distanceCm, decimal voltage)
         {
             var handler = ReportBackAvailable;
-            handler?.Invoke(this, new ReportBackEventArgs(distanceCm, voltage));
+            handler?.Invoke(this, new ReportBackEventArgs(playerId, distanceCm, voltage));
         }
 
         private Task HandleMessageAsync(Message message, CancellationToken cancellationToken)
         {
-            DeserializeMessage(message.Body, out int distanceCm, out decimal voltage);
-            OnReportBackAvailable(distanceCm, voltage);
+            DeserializeMessage(message.Body, out string playerId, out int distanceCm, out decimal voltage);
+            OnReportBackAvailable(playerId, distanceCm, voltage);
             return Task.CompletedTask;
 
-            void DeserializeMessage(byte[] messageBody, out int d, out decimal v)
+            void DeserializeMessage(byte[] messageBody, out string pId, out int d, out decimal v)
             {
                 using (var stream = new MemoryStream(messageBody))
                 {
-                    var writer = new BinaryReader(stream);
-                    d = writer.ReadInt32();
-                    v = writer.ReadDecimal();
+                    var reader = new BinaryReader(stream);
+                    pId = reader.ReadString();
+                    d = reader.ReadInt32();
+                    v = reader.ReadDecimal();
                 }
             }
         }
@@ -79,12 +80,14 @@ namespace IoTGame.Driver
 
     public class ReportBackEventArgs : EventArgs
     {
-        public ReportBackEventArgs(int distanceCm, decimal voltage)
+        public ReportBackEventArgs(string playerId, int distanceCm, decimal voltage)
         {
+            PlayerId = playerId;
             DistanceCm = distanceCm;
             Voltage = voltage;
         }
 
+        public string PlayerId { get; set; }
         public int DistanceCm { get; }
         public decimal Voltage { get; }
     }
