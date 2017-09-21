@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Threading;
@@ -13,14 +14,16 @@ namespace IoTGame.Controller
 {
     public class ServiceBusController : IController
     {
+        private readonly string _playerId;
         private readonly IDriver _driver;
         private readonly string _subscriptionName;
 
         private ISubscriptionClient _subscriptionClient;
         private ITopicClient _topicClient;
 
-        public ServiceBusController(IDriver driver, string subscriptionName)
+        public ServiceBusController(string playerId, IDriver driver, string subscriptionName)
         {
+            _playerId = playerId;
             _driver = driver;
             _subscriptionName = subscriptionName;
         }
@@ -48,6 +51,9 @@ namespace IoTGame.Controller
 
         public async Task ReportBackAsync(int distanceCm, decimal voltage)
         {
+            if (_playerId == null)
+                throw new Exception("PlayerId cannot be null when sending out reports");
+
             var message = new Message(SerializeReport());
             await _topicClient.SendAsync(message);
 
@@ -56,6 +62,7 @@ namespace IoTGame.Controller
                 using (var stream = new MemoryStream())
                 {
                     var writer = new BinaryWriter(stream);
+                    writer.Write(_playerId);
                     writer.Write(distanceCm);
                     writer.Write(voltage);
                     return stream.ToArray();

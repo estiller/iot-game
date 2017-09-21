@@ -23,7 +23,7 @@ namespace IoTGame.ControlWinApp
             driver.ReportBackAvailable += OnReportBackAvailable;
             var eventDecorator = new EventDriverDecorator(driver);
             eventDecorator.DriveCommandAvailable += DriveCommandAvailable;
-            _controller = new ServiceBusController(eventDecorator, ServiceBusConstants.ControlSubscriptionName);
+            _controller = new ServiceBusController(null, eventDecorator, ServiceBusConstants.ControlSubscriptionName);
 
             InitializeComponent();
         }
@@ -36,8 +36,19 @@ namespace IoTGame.ControlWinApp
                 return;
             }
 
-            BatteryVoltageText.Text = args.Voltage.ToString(CultureInfo.CurrentCulture);
-            DistanceText.Text = args.DistanceCm.ToString(CultureInfo.CurrentCulture);
+            switch (args.PlayerId)
+            {
+                case PlayerIds.White:
+                    BatteryVoltageTextWhite.Text = args.Voltage.ToString(CultureInfo.CurrentCulture);
+                    DistanceTextWhite.Text = args.DistanceCm.ToString(CultureInfo.CurrentCulture);
+                    break;
+                case PlayerIds.Red:
+                    BatteryVoltageTextRed.Text = args.Voltage.ToString(CultureInfo.CurrentCulture);
+                    DistanceTextRed.Text = args.DistanceCm.ToString(CultureInfo.CurrentCulture);
+                    break;
+                default:
+                    throw new Exception();
+            }
         }
 
         private async void DriveCommandAvailable(object sender, DriveCommandEventArgs args)

@@ -17,19 +17,40 @@
             </StackPanel>
         </StackPanel>
 
-        <StackPanel Orientation="Horizontal">
-            <TextBlock Text="Battery Voltage: "/>
-            <TextBlock Name="BatteryVoltageText" Foreground="Red" />
-        </StackPanel>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="400"/>
+                <ColumnDefinition Width="400"/>
+            </Grid.ColumnDefinitions>
 
-        <StackPanel Orientation="Horizontal">
-            <TextBlock Text="Distance from front: "/>
-            <TextBlock Name="DistanceText" Foreground="Red" />
-        </StackPanel>
+            <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0">
+                <TextBlock Text="Distance from front: "/>
+                <TextBlock Name="DistanceTextWhite" Foreground="Blue" />
+            </StackPanel>
+            
+            <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="1">
+                <TextBlock Text="Distance from front: "/>
+                <TextBlock Name="DistanceTextRed" Foreground="Red" />
+            </StackPanel>
 
-        <StackPanel Orientation="Horizontal">
-            <controls:VelocityGraph Width="400" Height="400" Background="Blue" VectorX="380" VectorY="200" Margin="10" x:Name="VelocityGraphWhite"/>
-            <controls:VelocityGraph Width="400" Height="400" Background="Red" VectorX="380" VectorY="200" Margin="10" x:Name="VelocityGraphRed"/>
-        </StackPanel>
+            <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="0">
+                <TextBlock Text="Battery Voltage: "/>
+                <TextBlock Name="BatteryVoltageTextWhite" Foreground="Blue" />
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1">
+                <TextBlock Text="Battery Voltage: "/>
+                <TextBlock Name="BatteryVoltageTextRed" Foreground="Red" />
+            </StackPanel>
+            
+            <controls:VelocityGraph Width="400" Height="400" Background="Blue" VectorX="380" VectorY="200" Margin="10" x:Name="VelocityGraphWhite" Grid.Row="1" Grid.Column="0"/>
+
+            <controls:VelocityGraph Width="400" Height="400" Background="Red" VectorX="380" VectorY="200" Margin="10" x:Name="VelocityGraphRed" Grid.Row="1" Grid.Column="1"/>
+        </Grid>
     </StackPanel>
 </Page>
