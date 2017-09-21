@@ -48,10 +48,10 @@ namespace IoTGame.ControlWinApp.IoTHub
 
         public event EventHandler<ReportBackEventArgs> ReportBackAvailable;
 
-        private void OnReportBackAvailable(int distanceCm, decimal voltage)
+        private void OnReportBackAvailable(string playerId, int distanceCm, decimal voltage)
         {
             var handler = ReportBackAvailable;
-            handler?.Invoke(this, new ReportBackEventArgs(distanceCm, voltage));
+            handler?.Invoke(this, new ReportBackEventArgs(playerId, distanceCm, voltage));
         }
 
         private async Task RecieveMessagesAsync(CancellationToken cancellationToken)
@@ -66,9 +66,10 @@ namespace IoTGame.ControlWinApp.IoTHub
                 using (var stream = new MemoryStream(buffer))
                 {
                     var reader = new BinaryReader(stream);
+                    var playerId = reader.ReadString();
                     var distanceCm = reader.ReadInt32();
                     var voltage = reader.ReadDecimal();
-                    OnReportBackAvailable(distanceCm, voltage);
+                    OnReportBackAvailable(playerId, distanceCm, voltage);
                 }
             }
         }

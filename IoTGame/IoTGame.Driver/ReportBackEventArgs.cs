@@ -4,12 +4,14 @@ namespace IoTGame.Driver
 {
     public class ReportBackEventArgs : EventArgs
     {
-        public ReportBackEventArgs(int distanceCm, decimal voltage)
+        public ReportBackEventArgs(string playerId, int distanceCm, decimal voltage)
         {
+            PlayerId = playerId;
             DistanceCm = distanceCm;
             Voltage = voltage;
         }
 
+        public string PlayerId { get; set; }
         public int DistanceCm { get; }
         public decimal Voltage { get; }
     }
