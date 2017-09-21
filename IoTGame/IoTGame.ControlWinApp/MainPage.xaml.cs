@@ -29,6 +29,9 @@ namespace IoTGame.ControlWinApp
 
         private async void OnReportBackAvailable(object sender, ReportBackEventArgs args)
         {
+            if (args.PlayerId != _controller.PlayerId)
+                return;
+
             if (!Dispatcher.HasThreadAccess)
             {
                 await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => OnReportBackAvailable(sender, args));

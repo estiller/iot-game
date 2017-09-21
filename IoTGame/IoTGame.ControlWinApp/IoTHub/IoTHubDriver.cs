@@ -33,10 +33,10 @@ namespace IoTGame.ControlWinApp.IoTHub
 
         public event EventHandler<ReportBackEventArgs> ReportBackAvailable;
 
-        private void OnReportBackAvailable(int distanceCm, decimal voltage)
+        private void OnReportBackAvailable(string playerId, int distanceCm, decimal voltage)
         {
             var handler = ReportBackAvailable;
-            handler?.Invoke(this, new ReportBackEventArgs(distanceCm, voltage));
+            handler?.Invoke(this, new ReportBackEventArgs(playerId, distanceCm, voltage));
         }
     }
 }
